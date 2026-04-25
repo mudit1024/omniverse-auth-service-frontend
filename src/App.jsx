@@ -1,26 +1,38 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
-function Login() {
-  return <h2>Login Page</h2>;
-}
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
-function Register() {
-  return <h2>Register Page</h2>;
-}
+function AnimatedRoutes() {
+  const location = useLocation();
 
-function Dashboard() {
-  return <h2>Dashboard</h2>;
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </AnimatePresence>
+  );
 }
 
 function App() {
-  // console.log(import.meta.env.VITE_API_URL);
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }
